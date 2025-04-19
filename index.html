@@ -22,34 +22,38 @@
             background-color: var(--color-bg);
             max-width: 600px;
             margin: auto;
+            font-family: 'Inter', sans-serif;
         }
 
         h1, h2, h3 {
             font-family: 'Comfortaa', sans-serif;
         }
 
-        summary {
-            width: 100%;
-            background-color: var(--color-grey);
+        details {
             border-radius: 0.5rem;
         }
 
-        .time {
-            display: block;
-            height: 2rem;
-            background-color: var(--color-green);
-            transition: width 0.5s ease-in-out;
+        summary {
+            padding: 1rem;
+            width: 100%;
+            background-color: var(--color-grey);
+        }
+        summary::marker { content: none; }
+        summary h2 {
+            margin: 0;
         }
 
-        .work {
+        details > div {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .time, .work {
             display: block;
-            height: 2rem;
+            width: 4rem;
             background-color: var(--color-green);
             transition: width 0.5s ease-in-out;
-            overflow-x: hidden;
-            border-bottom-left-radius: inherit;
-            border-bottom-right-radius: inherit;
-
+            text-align: center;
         }
 
         li[done] {
@@ -58,11 +62,24 @@
     </style>
 </head>
 <body>
-    <details>
-        <summary start="2025-04-20T00:00:00Z" end="2025-05-10T06:55:00Z">
-            Primary
-            <span class="time"></span>
-            <span class="work"></span>
+    <details start="2025-03-20T00:00:00Z" finish="2025-05-10T06:55:00Z">
+        <summary>
+            <h2>Primary</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum consequatur molestiae impedit, iste accusantium dolorem libero commodi autem culpa soluta mollitia nulla iusto quidem eaque iure vitae suscipit natus delectus.</p>
+        </summary>
+        <ul>
+            <li>a</li>
+            <li>a</li>
+            <li>a</li>
+            <li>a</li>
+            <li>a</li>
+            <li>a</li>
+        </ul>
+    </details>
+    <details start="2025-03-20T00:00:00Z" finish="2025-04-10T06:55:00Z">
+        <summary>
+            <h2>Primary</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum consequatur molestiae impedit, iste accusantium dolorem libero commodi autem culpa soluta mollitia nulla iusto quidem eaque iure vitae suscipit natus delectus.</p>
         </summary>
         <ul>
             <li done>a</li>
@@ -75,27 +92,36 @@
     </details>
 </body>
 <script>
-    document.querySelectorAll('details > summary').forEach((summary) => {
-        const workAll = summary.parentElement.querySelectorAll('li').length,
-            workDo = summary.parentElement.querySelectorAll('li[done]').length;
-        summary.querySelector('.work').style.width = `${(workDo / workAll * 100).toFixed(1)}%`;
-        summary.querySelector('.work').innerHTML = `${workDo} / ${workAll}`;
+    document.querySelectorAll('details').forEach((details) => {
+        details.innerHTML += `<div>
+
+        </div>`;
+
+        details.querySelector('ul').outerHTML = '<div>'
+            + '<div><span class="time"></span></div> <div><span class="work"></span></div>'
+            + details.querySelector('ul').outerHTML
+        + '</div>';
+
+        const workAll = details.querySelectorAll('li').length,
+            workDo = details.querySelectorAll('li[done]').length;
+        details.querySelector('.work').style.height = `${(workDo / workAll * 100).toFixed(1)}%`;
+        details.querySelector('.work').innerHTML = `${workDo} / ${workAll}`;
 
         if (workDo < workAll)
-            summary.parentElement.setAttribute('open', '');
+            details.setAttribute('open', '');
     });
 
     setInterval(() => {
-        document.querySelectorAll('details > summary').forEach((summary) => {
-            const start = new Date(summary.getAttribute('start')),
-                end = new Date(summary.getAttribute('end')),
+        document.querySelectorAll('details').forEach((details) => {
+            const start = new Date(details.getAttribute('start')),
+                finish = new Date(details.getAttribute('finish')),
                 now = new Date();
-            const timeDo = Math.max(0, now - start),
-                timeAll = end - start;
-            const timePercent = (timeDo / timeAll) * 100;
+            const timeDo = Math.max(now - start, 0),
+                timeAll = finish - start;
+            const timePercent = Math.min((timeDo / timeAll) * 100, 100);
 
-            summary.querySelector('.time').style.width = `${timePercent}%`;
-            summary.querySelector('.time').innerHTML = `${timePercent.toFixed(1)}%`;
+            details.querySelector('.time').style.height = `${timePercent}%`;
+            details.querySelector('.time').innerHTML = `${timePercent.toFixed(1)}%`;
         });
     }, 500);
 </script>
