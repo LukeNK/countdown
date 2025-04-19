@@ -56,19 +56,30 @@
             text-align: center;
         }
 
+        ul {
+            flex: 1 1 100%;
+        }
+
+
+        li {
+            display: flex;
+            justify-content: space-between;
+        }
+
         li[done] {
             text-decoration: line-through;
         }
     </style>
 </head>
 <body>
+    <h1 style="text-align: center;"><time id="VAN"></time><br><time id="HCM"></time></h1>
     <details start="2025-03-20T00:00:00Z" finish="2025-05-10T06:55:00Z">
         <summary>
             <h2>Primary</h2>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum consequatur molestiae impedit, iste accusantium dolorem libero commodi autem culpa soluta mollitia nulla iusto quidem eaque iure vitae suscipit natus delectus.</p>
         </summary>
         <ul>
-            <li>a</li>
+            <li>aaaaaaaaa <time datetime="a">a</time></li>
             <li>a</li>
             <li>a</li>
             <li>a</li>
@@ -93,10 +104,6 @@
 </body>
 <script>
     document.querySelectorAll('details').forEach((details) => {
-        details.innerHTML += `<div>
-
-        </div>`;
-
         details.querySelector('ul').outerHTML = '<div>'
             + '<div><span class="time"></span></div> <div><span class="work"></span></div>'
             + details.querySelector('ul').outerHTML
@@ -112,10 +119,13 @@
     });
 
     setInterval(() => {
+        const now = new Date();
+        document.getElementById('VAN').innerHTML = now.toLocaleString('en-CA', { timeZone: 'America/Vancouver' });
+        document.getElementById('HCM').innerHTML = now.toLocaleString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
+
         document.querySelectorAll('details').forEach((details) => {
             const start = new Date(details.getAttribute('start')),
-                finish = new Date(details.getAttribute('finish')),
-                now = new Date();
+                finish = new Date(details.getAttribute('finish'));
             const timeDo = Math.max(now - start, 0),
                 timeAll = finish - start;
             const timePercent = Math.min((timeDo / timeAll) * 100, 100);
