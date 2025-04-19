@@ -76,7 +76,7 @@
         VAN: <time id="VAN"></time><br>
         HCM: <time id="HCM"></time>
     </h1>
-    <details start="2025-04-19T00:05:00Z" finish="2025-04-20T00:14:00Z">
+    <details start="2025-04-19T00:05:00Z" finish="2025-04-20T14:00:00Z">
         <summary>
             <h2>Countdown website</h2>
             <p>Build a quick countdown website to track everything</p>
@@ -93,6 +93,10 @@
             + '<div><span class="time"></span></div> <div><span class="work"></span></div>'
             + details.querySelector('ul').outerHTML
         + '</div>';
+
+        const finish = new Date(details.getAttribute('finish'));
+        details.querySelector('ul').innerHTML +=
+            `<b>Deadline: ${finish.toLocaleString('en-CA', { dateStyle: 'short', timeStyle: 'short' })}</b>`
     });
 
     setInterval(() => {
