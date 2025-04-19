@@ -1,0 +1,102 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+        html {
+            --color-fg: #030301ff;
+            --color-bg: #fffff3ff;
+            --color-green: #00d9c0ff;
+            --color-grey: #b7ad99ff;
+            --color-red: #ff4365ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Comfortaa', sans-serif;
+        }
+
+        summary {
+            width: 100%;
+            background-color: var(--color-grey);
+            border-radius: 0.5rem;
+        }
+
+        .time {
+            display: block;
+            height: 2rem;
+            background-color: var(--color-green);
+            transition: width 0.5s ease-in-out;
+        }
+
+        .work {
+            display: block;
+            height: 2rem;
+            background-color: var(--color-green);
+            transition: width 0.5s ease-in-out;
+            overflow-x: hidden;
+            border-bottom-left-radius: inherit;
+            border-bottom-right-radius: inherit;
+
+        }
+
+        li[done] {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+    <details>
+        <summary start="2025-04-20T00:00:00Z" end="2025-05-10T06:55:00Z">
+            Primary
+            <span class="time"></span>
+            <span class="work"></span>
+        </summary>
+        <ul>
+            <li done>a</li>
+            <li>a</li>
+            <li>a</li>
+            <li>a</li>
+            <li>a</li>
+            <li>a</li>
+        </ul>
+    </details>
+</body>
+<script>
+    document.querySelectorAll('details > summary').forEach((summary) => {
+        const workAll = summary.parentElement.querySelectorAll('li').length,
+            workDo = summary.parentElement.querySelectorAll('li[done]').length;
+        summary.querySelector('.work').style.width = `${(workDo / workAll * 100).toFixed(1)}%`;
+        summary.querySelector('.work').innerHTML = `${workDo} / ${workAll}`;
+
+        if (workDo < workAll)
+            summary.parentElement.setAttribute('open', '');
+    });
+
+    setInterval(() => {
+        document.querySelectorAll('details > summary').forEach((summary) => {
+            const start = new Date(summary.getAttribute('start')),
+                end = new Date(summary.getAttribute('end')),
+                now = new Date();
+            const timeDo = Math.max(0, now - start),
+                timeAll = end - start;
+            const timePercent = (timeDo / timeAll) * 100;
+
+            summary.querySelector('.time').style.width = `${timePercent}%`;
+            summary.querySelector('.time').innerHTML = `${timePercent.toFixed(1)}%`;
+        });
+    }, 500);
+</script>
+</html>
